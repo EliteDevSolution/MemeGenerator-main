@@ -10,7 +10,7 @@ import {
   PermissionsAndroid,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useRef} from 'react';
 import { Colors, Fonts } from '@/Constants';
 import HeaderNormal from '../Home/Components/HeaderNormal';
 import { useRoute } from '@react-navigation/native';
@@ -31,6 +31,7 @@ const MemeDetailScreen = (props: Props) => {
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [loading, setLoading] = useState(false);
+  const topTextInputRef = useRef<TextInput>(null);
 
   const createSuccess = (data: any) => {
     setLoading(false);
@@ -53,6 +54,18 @@ const MemeDetailScreen = (props: Props) => {
   );
 
   const onPress = () => {
+    if (!topText.trim()) {
+      Toast.show({
+        type: 'error',
+        text1: 'Input Required',
+        text2: 'Please enter top text.',
+      });
+      setTimeout(() => {
+        // @ts-ignore
+        topTextInputRef?.current?.focus?.();
+      }, 100);
+      return;
+    }
     setLoading(true);
     refetch();
   };
@@ -159,7 +172,9 @@ const MemeDetailScreen = (props: Props) => {
           <View style={styles.viewInput}>
             <Text style={styles.txt}>Top Text: </Text>
             <TextInput
+              ref={topTextInputRef}
               value={topText}
+              autoFocus
               onChangeText={setTopText}
               style={styles.input}
               placeholder='meme top text'
