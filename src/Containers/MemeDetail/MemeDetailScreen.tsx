@@ -9,51 +9,53 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   View,
-} from 'react-native'
-import React, { useState } from 'react'
-import { Colors, Fonts } from '@/Constants'
-import HeaderNormal from '../Home/Components/HeaderNormal'
-import { useRoute } from '@react-navigation/native'
-import { SCREEN_WIDTH, getExtensionFile, isAndroid, isIOS } from '@/Utils/common'
-import AutoHeightImage from 'react-native-auto-height-image'
-import { useCreateImage } from '@/Hooks/useCreateImage'
-import Toast from 'react-native-toast-message'
-import { Images } from '@/Assets'
-import RNFetchBlob from 'rn-fetch-blob'
-import Spinner from 'react-native-loading-spinner-overlay'
+} from 'react-native';
+import React, { useState } from 'react';
+import { Colors, Fonts } from '@/Constants';
+import HeaderNormal from '../Home/Components/HeaderNormal';
+import { useRoute } from '@react-navigation/native';
+import { SCREEN_WIDTH, getExtensionFile, isAndroid, isIOS } from '@/Utils/common';
+import AutoHeightImage from 'react-native-auto-height-image';
+import { useCreateImage } from '@/Hooks/useCreateImage';
+import Toast from 'react-native-toast-message';
+import { Images } from '@/Assets';
+import RNFetchBlob from 'rn-fetch-blob';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-const MemeDetailScreen = () => {
-  const route = useRoute<any>()
-  const data = route.params?.data
-  const [image, setImage] = useState(data?.blank)
-  const [topText, setTopText] = useState('')
-  const [bottomText, setBottomText] = useState('')
-  const [loading, setLoading] = useState(false)
+type Props = {};
 
-  const createSuccess = () => {
-    setLoading(false)
+const MemeDetailScreen = (props: Props) => {
+  const route = useRoute<any>();
+  const data = route.params?.data;
+  const [image, setImage] = useState(data?.blank);
+  const [topText, setTopText] = useState('');
+  const [bottomText, setBottomText] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const createSuccess = (data: any) => {
+    setLoading(false);
     Toast.show({
       type: 'success',
       text1: 'Success',
       text2: 'Create Image Success',
-    })
+    });
     if (data?.url) {
-      setImage(data.url)
+      setImage(data.url);
     }
-  }
+  };
 
   const { refetch } = useCreateImage(
     {
       template_id: data.id,
       text: [topText.trim(), bottomText.trim()],
     },
-    createSuccess,
-  )
+    createSuccess
+  );
 
   const onPress = () => {
-    setLoading(true)
-    refetch()
-  }
+    setLoading(true);
+    refetch();
+  };
   const onPressDownload = () => {
     setLoading(true)
     const { config, fs } = RNFetchBlob
@@ -144,8 +146,8 @@ const MemeDetailScreen = () => {
       type: 'success',
       text1: 'Success',
       text2: 'Download Image Success.',
-    })
-  }
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -160,7 +162,7 @@ const MemeDetailScreen = () => {
               value={topText}
               onChangeText={setTopText}
               style={styles.input}
-              placeholder='Top Title'
+              placeholder='meme top text'
               placeholderTextColor={Colors.colorA3A9AC}
             />
           </View>
@@ -170,7 +172,7 @@ const MemeDetailScreen = () => {
               value={bottomText}
               onChangeText={setBottomText}
               style={styles.input}
-              placeholder='Bottom Content'
+              placeholder='meme bottom text'
               placeholderTextColor={Colors.colorA3A9AC}
             />
           </View>
@@ -191,10 +193,10 @@ const MemeDetailScreen = () => {
         </ScrollView>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default MemeDetailScreen
+export default MemeDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -248,4 +250,4 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH - 40,
     backgroundColor: '#99999922',
   },
-})
+});
